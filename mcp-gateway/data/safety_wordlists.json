@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-01-28",
+    "description": "YouTube Content Safety Wordlists - 2026 Policy Reference",
+    "supported_languages": ["en", "zh"]
+  },
+  "caution_terms": {
+    "en": [
+      "cure",
+      "treatment",
+      "miracle",
+      "medical advice",
+      "weight loss",
+      "diet pill",
+      "supplement",
+      "guaranteed returns",
+      "get rich quick",
+      "financial advice",
+      "investment opportunity",
+      "crypto gains",
+      "election fraud",
+      "conspiracy",
+      "cover-up",
+      "shocking truth",
+      "they don't want you to know",
+      "banned",
+      "censored"
+    ],
+    "zh": [
+      "治愈",
+      "神药",
+      "特效药",
+      "医疗建议",
+      "减肥药",
+      "保健品",
+      "稳赚不赔",
+      "财务自由",
+      "投资建议",
+      "暴富",
+      "理财秘诀",
+      "阴谋",
+      "真相",
+      "内幕",
+      "震惊",
+      "他们不想让你知道",
+      "被禁"
+    ]
+  },
+  "restricted_terms": {
+    "en": [
+      "violence",
+      "graphic",
+      "brutal",
+      "attack",
+      "weapon",
+      "gun",
+      "shooting",
+      "adult",
+      "explicit",
+      "nsfw",
+      "xxx",
+      "dangerous",
+      "do not try",
+      "challenge gone wrong",
+      "hate",
+      "racist",
+      "discrimination"
+    ],
+    "zh": [
+      "暴力",
+      "血腥",
+      "残忍",
+      "攻击",
+      "武器",
+      "枪",
+      "枪击",
+      "危险",
+      "请勿模仿",
+      "挑战失败",
+      "仇恨",
+      "歧视"
+    ]
+  },
+  "blocked_terms": {
+    "en": [
+      "full movie",
+      "free download",
+      "pirated",
+      "watch free",
+      "stream free",
+      "terrorism",
+      "how to make bomb",
+      "drug",
+      "underage",
+      "free money",
+      "hack",
+      "cheat",
+      "exploit"
+    ],
+    "zh": [
+      "完整电影",
+      "免费下载",
+      "盗版",
+      "免费观看",
+      "在线播放",
+      "恐怖",
+      "免费领取",
+      "破解",
+      "作弊",
+      "漏洞"
+    ]
+  },
+  "safe_alternatives": {
+    "en": {
+      "cure": "may help with",
+      "guaranteed": "potential",
+      "shocking": "surprising",
+      "secret": "lesser-known",
+      "hack": "tip",
+      "free": "no-cost",
+      "miracle": "effective",
+      "banned": "controversial",
+      "censored": "restricted",
+      "full movie": "complete video",
+      "free download": "available for download",
+      "get rich quick": "financial opportunity",
+      "weight loss": "wellness journey",
+      "diet pill": "dietary supplement"
+    },
+    "zh": {
+      "治愈": "可能有帮助",
+      "稳赚": "潜在收益",
+      "震惊": "令人惊讶",
+      "秘密": "鲜为人知",
+      "破解": "技巧",
+      "免费": "无需付费",
+      "神药": "有效方法",
+      "被禁": "有争议",
+      "完整电影": "完整视频",
+      "免费下载": "可下载",
+      "快速致富": "财务机会",
+      "减肥": "健康之旅",
+      "减肥药": "保健品"
+    }
+  },
+  "monetization_rules": {
+    "yellow_label_triggers": [
+      "Content with caution_terms",
+      "Potentially misleading claims",
+      "Health or financial advice",
+      "Controversial statements"
+    ],
+    "limited_or_no_ads": [
+      "Content with restricted_terms",
+      "Graphic or violent content",
+      "Adult content suggestions",
+      "Dangerous behavior instructions"
+    ],
+    "removal_triggers": [
+      "Content with blocked_terms",
+      "Copyright infringement",
+      "Hateful or abusive content",
+      "Illegal activity instructions"
+    ]
+  },
+  "language_specific_rules": {
+    "en": {
+      "case_sensitive": false,
+      "word_boundary": true,
+      "allow_variations": true
+    },
+    "zh": {
+      "case_sensitive": false,
+      "word_boundary": true,
+      "allow_variations": true
+    }
+  }
+}

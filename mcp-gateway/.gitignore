@@ -13,3 +13,10 @@ credentials/*.json
 *.log
 .mypy_cache/
 .pytest_cache/
+
+# Claude Code
+.claude/
+**/CLAUDE.md
+
+# MCP server data (claude-mem, etc.)
+mcp-server/
