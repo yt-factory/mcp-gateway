@@ -1,0 +1,260 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-01-29",
+    "description": "Regional Cultural and Political Sensitivity Database",
+    "supported_regions": ["JP", "DE", "CN", "SA", "IN", "KR", "RU", "TR", "TH", "PL"]
+  },
+  "regions": {
+    "JP": {
+      "name": "Japan",
+      "categories": {
+        "historical": {
+          "severity": "blocked",
+          "terms": [
+            "atomic bomb joke",
+            "hiroshima joke",
+            "nagasaki joke",
+            "comfort women denial",
+            "war crimes denial japan",
+            "nanking denial",
+            "rising sun flag glorification"
+          ],
+          "reason": "Historical sensitivity - atomic bombings and WWII",
+          "suggestion": "Avoid jokes or denialism about WWII events in Japan"
+        },
+        "territorial": {
+          "severity": "warning",
+          "terms": [
+            "takeshima korean",
+            "senkaku chinese",
+            "northern territories russian"
+          ],
+          "reason": "Territorial dispute sensitivity",
+          "suggestion": "Use neutral terms when discussing disputed territories"
+        }
+      }
+    },
+    "DE": {
+      "name": "Germany",
+      "categories": {
+        "hate_symbols": {
+          "severity": "blocked",
+          "terms": [
+            "nazi symbol",
+            "swastika promotion",
+            "hitler praise",
+            "third reich glorification",
+            "heil hitler",
+            "ss glorification",
+            "holocaust denial",
+            "holocaust joke",
+            "auschwitz joke"
+          ],
+          "reason": "Strict hate speech laws in Germany - Criminal offense",
+          "suggestion": "Nazi symbols and Holocaust denial are illegal in Germany"
+        },
+        "extremism": {
+          "severity": "blocked",
+          "terms": [
+            "neo-nazi recruitment",
+            "white power germany",
+            "afd extremism praise"
+          ],
+          "reason": "Anti-extremism laws",
+          "suggestion": "Avoid content promoting extremist ideologies"
+        }
+      }
+    },
+    "CN": {
+      "name": "China",
+      "categories": {
+        "political": {
+          "severity": "blocked",
+          "terms": [
+            "tiananmen square massacre",
+            "june 4th incident",
+            "tank man",
+            "free tibet",
+            "tibet independence",
+            "taiwan independence",
+            "xinjiang camps",
+            "uyghur persecution",
+            "falun gong",
+            "dalai lama political"
+          ],
+          "reason": "Political sensitivity - Content blocked in China",
+          "suggestion": "Content will be blocked in mainland China"
+        },
+        "leadership": {
+          "severity": "blocked",
+          "terms": [
+            "xi jinping criticism",
+            "ccp criticism",
+            "winnie the pooh xi"
+          ],
+          "reason": "Leadership criticism - Content blocked in China",
+          "suggestion": "Avoid political criticism of Chinese leadership"
+        }
+      }
+    },
+    "SA": {
+      "name": "Saudi Arabia / Middle East",
+      "categories": {
+        "religious": {
+          "severity": "blocked",
+          "terms": [
+            "prophet muhammad cartoon",
+            "prophet criticism",
+            "quran criticism",
+            "islam criticism harsh",
+            "apostasy promotion",
+            "atheism promotion"
+          ],
+          "reason": "Religious restrictions - Potentially illegal",
+          "suggestion": "Avoid content critical of Islam in Middle Eastern markets"
+        },
+        "lifestyle": {
+          "severity": "warning",
+          "terms": [
+            "lgbt pride promotion",
+            "gay marriage promotion",
+            "alcohol promotion",
+            "pork promotion halal",
+            "dating content explicit"
+          ],
+          "reason": "Lifestyle restrictions in conservative regions",
+          "suggestion": "Content may be restricted in Middle Eastern countries"
+        }
+      }
+    },
+    "IN": {
+      "name": "India",
+      "categories": {
+        "religious": {
+          "severity": "blocked",
+          "terms": [
+            "beef eating promotion",
+            "cow slaughter",
+            "hindu-muslim conflict incitement",
+            "caste discrimination praise",
+            "dalit discrimination"
+          ],
+          "reason": "Religious and caste sensitivity",
+          "suggestion": "Avoid content that could incite religious tensions"
+        },
+        "political": {
+          "severity": "warning",
+          "terms": [
+            "kashmir independence",
+            "khalistan movement",
+            "modi criticism extreme"
+          ],
+          "reason": "Political sensitivity in India",
+          "suggestion": "Use caution with political content about India"
+        }
+      }
+    },
+    "KR": {
+      "name": "South Korea",
+      "categories": {
+        "japan_relations": {
+          "severity": "blocked",
+          "terms": [
+            "dokdo japan",
+            "takeshima dispute korea wrong",
+            "comfort women denial",
+            "japanese occupation praise",
+            "rising sun flag"
+          ],
+          "reason": "Historical Japan-Korea tensions",
+          "suggestion": "Avoid content denying Japanese wartime actions in Korea"
+        },
+        "north_korea": {
+          "severity": "blocked",
+          "terms": [
+            "kim jong un praise",
+            "north korea propaganda",
+            "juche ideology promotion"
+          ],
+          "reason": "National Security Law violations",
+          "suggestion": "Avoid content that could be seen as pro-North Korea"
+        }
+      }
+    },
+    "RU": {
+      "name": "Russia",
+      "categories": {
+        "political": {
+          "severity": "blocked",
+          "terms": [
+            "ukraine invasion criticism",
+            "russian war crimes",
+            "putin criticism direct",
+            "navalny support",
+            "anti-war protest russia"
+          ],
+          "reason": "Political restrictions - May be blocked in Russia",
+          "suggestion": "Content critical of Russian government may be blocked"
+        },
+        "historical": {
+          "severity": "warning",
+          "terms": [
+            "soviet crimes",
+            "holodomor ukraine",
+            "stalin criticism strong"
+          ],
+          "reason": "Historical sensitivity",
+          "suggestion": "Use caution with Soviet-era historical criticism"
+        }
+      }
+    },
+    "TR": {
+      "name": "Turkey",
+      "categories": {
+        "political": {
+          "severity": "blocked",
+          "terms": [
+            "armenian genocide",
+            "kurdistan independence",
+            "pkk support",
+            "erdogan criticism strong",
+            "gulen support"
+          ],
+          "reason": "Political and historical sensitivities in Turkey",
+          "suggestion": "Content may be blocked or restricted in Turkey"
+        }
+      }
+    },
+    "TH": {
+      "name": "Thailand",
+      "categories": {
+        "monarchy": {
+          "severity": "blocked",
+          "terms": [
+            "thai king criticism",
+            "thai monarchy criticism",
+            "lese majeste"
+          ],
+          "reason": "Lese majeste laws - Criminal offense in Thailand",
+          "suggestion": "Criticism of Thai monarchy is illegal in Thailand"
+        }
+      }
+    },
+    "PL": {
+      "name": "Poland",
+      "categories": {
+        "historical": {
+          "severity": "warning",
+          "terms": [
+            "polish death camps",
+            "polish collaboration nazis"
+          ],
+          "reason": "Historical sensitivity - May be illegal",
+          "suggestion": "Use 'Nazi German camps in occupied Poland'"
+        }
+      }
+    }
+  },
+  "all_regions": ["US", "UK", "CA", "AU", "DE", "FR", "JP", "KR", "CN", "IN", "SA", "RU", "TR", "TH", "PL", "BR", "MX"]
+}

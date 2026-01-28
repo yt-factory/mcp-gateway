@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-01-29",
+    "description": "Ad-Friendly Keywords Database - High CPM Optimization",
+    "supported_verticals": ["finance", "b2b_saas", "ai_tech", "education", "health_wellness", "real_estate", "insurance", "legal"]
+  },
+  "categories": {
+    "finance": {
+      "base_cpm": 25.0,
+      "keywords": [
+        "investment strategy",
+        "portfolio management",
+        "wealth building",
+        "retirement planning",
+        "financial planning",
+        "stock market analysis",
+        "dividend investing",
+        "ETF comparison",
+        "tax optimization",
+        "financial independence",
+        "passive income",
+        "compound interest"
+      ],
+      "title_patterns": [
+        "{topic} Investment Strategy for 2026",
+        "How to Build Wealth with {topic}",
+        "{topic} Portfolio Guide for Beginners"
+      ]
+    },
+    "b2b_saas": {
+      "base_cpm": 22.0,
+      "keywords": [
+        "enterprise software",
+        "SaaS comparison",
+        "business automation",
+        "productivity tools",
+        "CRM solutions",
+        "project management",
+        "team collaboration",
+        "workflow optimization",
+        "business intelligence",
+        "cloud migration"
+      ],
+      "title_patterns": [
+        "Best {topic} Software for Business in 2026",
+        "{topic} vs Competitors: Complete Comparison",
+        "How {topic} Transforms Business Operations"
+      ]
+    },
+    "ai_tech": {
+      "base_cpm": 18.0,
+      "keywords": [
+        "AI tools",
+        "machine learning",
+        "artificial intelligence",
+        "AI automation",
+        "GPT tutorial",
+        "Claude AI",
+        "AI coding",
+        "prompt engineering",
+        "AI workflow",
+        "generative AI",
+        "AI productivity"
+      ],
+      "title_patterns": [
+        "Complete {topic} Tutorial for 2026",
+        "How to Use {topic} Like a Pro",
+        "{topic}: The Ultimate Beginner's Guide"
+      ]
+    },
+    "education": {
+      "base_cpm": 12.0,
+      "keywords": [
+        "tutorial",
+        "complete guide",
+        "step by step",
+        "beginner friendly",
+        "learn",
+        "course",
+        "certification",
+        "masterclass",
+        "professional development",
+        "skill building"
+      ],
+      "title_patterns": [
+        "{topic} Tutorial: Complete Beginner's Guide",
+        "Learn {topic} in 2026: Step by Step",
+        "{topic} Masterclass for Professionals"
+      ]
+    },
+    "health_wellness": {
+      "base_cpm": 15.0,
+      "keywords": [
+        "fitness routine",
+        "workout guide",
+        "nutrition tips",
+        "wellness journey",
+        "healthy lifestyle",
+        "exercise tutorial",
+        "mental wellness",
+        "sleep optimization",
+        "stress management"
+      ],
+      "title_patterns": [
+        "{topic} Routine for Beginners",
+        "Complete {topic} Guide for 2026",
+        "How to Improve Your {topic}"
+      ]
+    },
+    "real_estate": {
+      "base_cpm": 28.0,
+      "keywords": [
+        "real estate investing",
+        "property market",
+        "home buying guide",
+        "mortgage tips",
+        "rental income",
+        "property management",
+        "real estate market analysis",
+        "first time home buyer"
+      ],
+      "title_patterns": [
+        "{topic} Investment Guide for 2026",
+        "How to {topic}: Complete Guide",
+        "{topic} Market Analysis"
+      ]
+    },
+    "insurance": {
+      "base_cpm": 35.0,
+      "keywords": [
+        "insurance comparison",
+        "coverage guide",
+        "policy review",
+        "insurance tips",
+        "premium optimization",
+        "life insurance",
+        "health insurance",
+        "auto insurance"
+      ],
+      "title_patterns": [
+        "Best {topic} in 2026: Complete Comparison",
+        "How to Choose {topic}: Expert Guide",
+        "{topic} Tips That Save Money"
+      ]
+    },
+    "legal": {
+      "base_cpm": 30.0,
+      "keywords": [
+        "legal guide",
+        "contract basics",
+        "legal tips",
+        "business law",
+        "intellectual property",
+        "legal compliance",
+        "regulations explained"
+      ],
+      "title_patterns": [
+        "{topic} Legal Guide for 2026",
+        "Understanding {topic}: What You Need to Know",
+        "{topic} Compliance Guide"
+      ]
+    }
+  },
+  "cpm_boost_patterns": {
+    "high_value_prefixes": [
+      "best",
+      "top",
+      "ultimate",
+      "complete",
+      "professional",
+      "enterprise",
+      "premium"
+    ],
+    "buyer_intent_signals": [
+      "vs",
+      "comparison",
+      "review",
+      "alternative",
+      "pricing",
+      "cost",
+      "worth it",
+      "should you buy"
+    ],
+    "freshness_signals": [
+      "2026",
+      "2025",
+      "updated",
+      "latest",
+      "new"
+    ]
+  },
+  "region_cpm_multipliers": {
+    "US": 1.5,
+    "UK": 1.2,
+    "CA": 1.1,
+    "AU": 1.1,
+    "DE": 0.9,
+    "JP": 1.3,
+    "CH": 1.4,
+    "NO": 1.3,
+    "SE": 1.1,
+    "NL": 1.0,
+    "FR": 0.85,
+    "ES": 0.7,
+    "IT": 0.7,
+    "BR": 0.4,
+    "IN": 0.3,
+    "PH": 0.25
+  },
+  "seasonal_adjustments": {
+    "Q4": 1.3,
+    "Q1": 0.9,
+    "Q2": 1.0,
+    "Q3": 1.0
+  }
+}
