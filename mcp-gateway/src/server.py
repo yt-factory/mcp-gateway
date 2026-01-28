@@ -28,6 +28,7 @@ from .services.circuit_breaker import (
 from .services.compliance import compliance_checker
 from .services.content_safety import content_safety
 from .services.entity_clusterer import EntityClusterer
+from .services.monetization_dashboard import monetization_dashboard
 from .services.publish_scheduler import (
     AudienceRegion,
     ContentType,
@@ -938,6 +939,141 @@ async def get_optimal_publish_time(
         "rationale": window.rationale,
         "alternatives": [t.isoformat() for t in (window.alternative_times or [])],
     }
+
+
+# ============================================
+# MONETIZATION DASHBOARD TOOLS
+# ============================================
+
+
+@mcp.tool()
+async def get_monetization_dashboard(
+    channel_id: str = None,
+    include_weekly: bool = True,
+    include_trends: bool = True,
+    include_recommendations: bool = True,
+) -> dict:
+    """
+    Get comprehensive monetization dashboard report.
+
+    Monitors 7 core metrics:
+    - AVD: Average View Duration (target: 7 min)
+    - CTR: Click-Through Rate (target: 8%)
+    - CPM: Cost Per Mille (target: $10)
+    - RPM: Revenue Per Mille (target: $6)
+    - AIO_RATE: AI Overview Attribution Rate (target: 10%)
+    - SUB_RATE: Subscriber Conversion Rate (target: 5%)
+    - SHORTS_CONV: Shorts to Main Video Conversion (target: 3%)
+
+    Args:
+        channel_id: Optional channel ID for multi-channel support
+        include_weekly: Include weekly performance summary
+        include_trends: Include trend analysis for all metrics
+        include_recommendations: Include optimization recommendations
+
+    Returns:
+        Comprehensive dashboard report with metrics, trends, and recommendations
+    """
+    report = await monetization_dashboard.get_dashboard_report(
+        channel_id=channel_id,
+        include_weekly=include_weekly,
+        include_trends=include_trends,
+        include_recommendations=include_recommendations,
+    )
+
+    # Convert to dict for JSON serialization
+    result = {
+        "generated_at": report.generated_at.isoformat(),
+        "overall_health": report.overall_health.value,
+        "realtime": {
+            "active_viewers": report.realtime.active_viewers,
+            "today_revenue": report.realtime.today_revenue,
+            "today_views": report.realtime.today_views,
+            "current_cpm": report.realtime.current_cpm,
+            "top_performing_video": report.realtime.top_performing_video,
+            "top_video_views": report.realtime.top_video_views,
+        },
+        "underperforming_videos": report.underperforming_videos,
+    }
+
+    if report.weekly_summary:
+        result["weekly_summary"] = {
+            "week_start": report.weekly_summary.week_start.isoformat(),
+            "week_end": report.weekly_summary.week_end.isoformat(),
+            "total_revenue": report.weekly_summary.total_revenue,
+            "total_views": report.weekly_summary.total_views,
+            "total_watch_time_hours": report.weekly_summary.total_watch_time_hours,
+            "average_cpm": report.weekly_summary.average_cpm,
+            "average_rpm": report.weekly_summary.average_rpm,
+            "subscriber_growth": report.weekly_summary.subscriber_growth,
+            "metrics": [
+                {
+                    "name": m.name,
+                    "current_value": m.current_value,
+                    "target_value": m.target_value,
+                    "unit": m.unit,
+                    "performance_level": m.performance_level.value,
+                    "trend": m.trend.value,
+                    "change_percent": m.change_percent,
+                    "optimization_tips": m.optimization_tips,
+                }
+                for m in report.weekly_summary.metrics
+            ],
+        }
+
+    if report.trend_analysis:
+        result["trend_analysis"] = [
+            {
+                "metric_name": t.metric_name,
+                "current_value": t.current_value,
+                "previous_value": t.previous_value,
+                "change_percent": t.change_percent,
+                "trend": t.trend.value,
+                "forecast_next_week": t.forecast_next_week,
+                "confidence": t.confidence,
+                "factors": t.factors,
+            }
+            for t in report.trend_analysis
+        ]
+
+    if report.recommendations:
+        result["recommendations"] = [
+            {
+                "priority": r.priority,
+                "category": r.category,
+                "title": r.title,
+                "description": r.description,
+                "expected_impact": r.expected_impact,
+                "action_items": r.action_items,
+            }
+            for r in report.recommendations
+        ]
+
+    return result
+
+
+@mcp.tool()
+async def get_metric_details(
+    metric_name: str,
+    channel_id: str = None,
+    days: int = 30,
+) -> dict:
+    """
+    Get detailed analysis for a specific monetization metric.
+
+    Args:
+        metric_name: One of AVD, CTR, CPM, RPM, AIO_RATE, SUB_RATE, SHORTS_CONV
+        channel_id: Optional channel ID
+        days: Number of days to analyze (default: 30)
+
+    Returns:
+        Detailed metric analysis including history, trends, and optimization tips
+    """
+    return await monetization_dashboard.get_metric_details(
+        metric_name=metric_name,
+        channel_id=channel_id,
+        days=days,
+    )
 
 
 # ============================================

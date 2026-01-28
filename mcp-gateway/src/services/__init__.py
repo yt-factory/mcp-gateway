@@ -54,6 +54,15 @@ from .content_safety import (
     content_safety,
 )
 from .entity_clusterer import EntityClusterer, TrendCluster
+from .monetization_dashboard import (
+    MetricTarget,
+    MetricTrend,
+    MetricValue,
+    MonetizationDashboard,
+    MonetizationDashboardReport,
+    PerformanceLevel,
+    monetization_dashboard,
+)
 from .publish_scheduler import (
     AudienceInsight,
     AudienceRegion,
@@ -126,6 +135,14 @@ __all__ = [
     # Entity Clusterer
     "EntityClusterer",
     "TrendCluster",
+    # Monetization Dashboard
+    "MonetizationDashboard",
+    "MetricTarget",
+    "MetricValue",
+    "MetricTrend",
+    "PerformanceLevel",
+    "MonetizationDashboardReport",
+    "monetization_dashboard",
     # Publish Scheduler
     "PublishScheduler",
     "PublishWindow",
