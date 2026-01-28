@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment
+.env
+
+# Credentials
+credentials/*.json
+!credentials/.gitkeep
+
+# Cache
+.cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Claude Code
+.claude/
+
+# MCP server data
+mcp-server/
