@@ -4925,8 +4925,9 @@ All services from the specification have been implemented and are production-rea
 | Ad Suitability Scorer | `src/services/ad_scorer.py` | ✅ Complete | `get_ad_suitability_score` |
 | Affiliate Manager | `src/services/affiliate_manager.py` | ✅ Complete | `extract_affiliate_links` |
 | AIO Tracker | `src/services/aio_tracker.py` | ✅ Complete | `check_aio_status`, `get_aio_optimization_feedback` |
+| Monetization Dashboard | `src/services/monetization_dashboard.py` | ✅ Complete | `get_monetization_dashboard`, `get_metric_details` |
 
-### 📊 MCP Tools Summary (15 Total)
+### 📊 MCP Tools Summary (19 Total)
 
 **Core Tools (5):**
 - `get_trending_topics` - Trend fetching with classification
@@ -4940,10 +4941,12 @@ All services from the specification have been implemented and are production-rea
 - `check_regional_safety` - 10-region cultural sensitivity
 - `check_compliance` - YouTube 2026 AI disclosure
 
-**Monetization Tools (3):**
+**Monetization Tools (7):**
 - `get_ad_suitability_score` - 0-100 monetization prediction
 - `get_ad_friendly_suggestions` - CPM optimization keywords
 - `extract_affiliate_links` - Automated affiliate detection
+- `get_monetization_dashboard` - Centralized revenue intelligence with 7 metrics
+- `get_metric_details` - Deep-dive analysis for individual metrics
 
 **AIO Tools (2):**
 - `check_aio_status` - Google AI Overview attribution
@@ -4994,10 +4997,10 @@ uv run python -m src.server
 
 ### 📈 Metrics
 
-- **Total lines of code added**: 5,299
-- **New service files**: 7
-- **External config files**: 3
-- **MCP tools**: 15 (up from 8)
+- **Total lines of code added**: 6,006
+- **New service files**: 9
+- **External config files**: 4
+- **MCP tools**: 19 (up from 8)
 
 <claude-mem-context>
 # Recent Activity
