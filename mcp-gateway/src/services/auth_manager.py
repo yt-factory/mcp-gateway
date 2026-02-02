@@ -98,7 +98,9 @@ class PreemptiveAuthManager:
 
     async def _refresh_credentials(self, creds: Credentials, service: str, channel_id: Optional[str]) -> Credentials:
         try:
-            creds.refresh(Request())
+            # Run blocking I/O in thread pool to avoid blocking the event loop
+            # creds.refresh(Request()) is synchronous and can block for network I/O
+            await asyncio.to_thread(creds.refresh, Request())
             self._save_credentials(service, channel_id, creds)
             logger.info(
                 "Token refreshed", service=service, new_expiry=creds.expiry.isoformat() if creds.expiry else None

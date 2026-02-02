@@ -46,15 +46,27 @@ class RateLimiter:
             )
             self._locks[api] = asyncio.Lock()
 
+    def _get_utc_midnight(self) -> datetime:
+        """Get the most recent UTC midnight for consistent daily resets."""
+        now = datetime.utcnow()
+        return now.replace(hour=0, minute=0, second=0, microsecond=0)
+
     async def acquire(self, api: str) -> bool:
         if api not in self.limits:
             return True
+
+        wait_seconds = 0.0
+
+        # First pass: check limits and determine if we need to wait
         async with self._locks[api]:
             limit = self.limits[api]
             now = datetime.utcnow()
-            if now - limit.last_day_reset > timedelta(days=1):
+            today_midnight = self._get_utc_midnight()
+
+            # Reset daily count at UTC midnight (not after arbitrary 24h period)
+            if limit.last_day_reset < today_midnight:
                 limit.current_day_count = 0
-                limit.last_day_reset = now
+                limit.last_day_reset = today_midnight
             if now - limit.last_minute_reset > timedelta(minutes=1):
                 limit.current_minute_count = 0
                 limit.last_minute_reset = now
@@ -65,9 +77,23 @@ class RateLimiter:
             if limit.current_minute_count >= limit.requests_per_minute:
                 wait_seconds = (limit.last_minute_reset + timedelta(minutes=1) - now).total_seconds()
                 logger.warning("Minute rate limit reached", api=api, wait_seconds=wait_seconds)
-                await asyncio.sleep(wait_seconds)
+                # Don't sleep inside lock - release lock first
+
+        # Sleep OUTSIDE the lock to avoid blocking other coroutines
+        if wait_seconds > 0:
+            await asyncio.sleep(wait_seconds)
+            # Re-acquire lock to reset counter and increment
+            async with self._locks[api]:
+                limit = self.limits[api]
                 limit.current_minute_count = 0
                 limit.last_minute_reset = datetime.utcnow()
+                limit.current_day_count += 1
+                limit.current_minute_count += 1
+                return True
+
+        # Normal case: no waiting needed, just increment
+        async with self._locks[api]:
+            limit = self.limits[api]
             limit.current_day_count += 1
             limit.current_minute_count += 1
             return True
