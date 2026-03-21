@@ -32,11 +32,30 @@ CACHE_DIR = _get_optional_env("CACHE_DIR", "./.cache")
 LOG_LEVEL = _get_optional_env("LOG_LEVEL", "INFO")
 
 
+MOCK_MODE = os.getenv("MOCK_MODE", "false").lower() in ("true", "1", "yes")
+
+
 def validate_config() -> list[str]:
-    """Validate configuration and return list of missing required variables."""
+    """Validate configuration and return list of missing required variables.
+
+    In mock mode, missing API credentials are acceptable.
+    In production mode, raises RuntimeError if required vars are missing.
+    """
     missing = []
     if not GOOGLE_API_KEY:
         missing.append("GOOGLE_API_KEY")
     if not GOOGLE_CSE_ID:
         missing.append("GOOGLE_CSE_ID")
+
+    if missing and not MOCK_MODE:
+        raise RuntimeError(
+            f"Missing required environment variables: {', '.join(missing)}. "
+            f"Set them in .env or enable MOCK_MODE=true for development."
+        )
+
+    if missing and MOCK_MODE:
+        logger.warning(
+            f"Missing env vars {missing} - running in MOCK_MODE, API calls will return mock data"
+        )
+
     return missing

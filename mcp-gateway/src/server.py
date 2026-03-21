@@ -42,10 +42,17 @@ from .tools.search import SearchFactsInput, SearchService
 from .tools.trends import TrendsService
 from .tools.youtube import YouTubePublisher
 from .utils.logger import setup_logger
+from .config import MOCK_MODE, validate_config
+from .services.mock_provider import mock_provider
 
 load_dotenv()
 
 logger = setup_logger()
+
+# Validate configuration (raises in production if required vars missing)
+_missing = validate_config()
+if MOCK_MODE:
+    logger.warning("MOCK_MODE enabled - external API calls will return mock data")
 
 mcp = FastMCP("yt-factory-gateway")
 
@@ -94,6 +101,9 @@ async def get_trending_topics(
     Circuit breaker protected.
     """
 
+    if MOCK_MODE:
+        return mock_provider.get_trending_topics(category, geo, max_results)
+
     async def _fetch():
         input_data = TrendingTopicsInput(
             category=category,
@@ -133,6 +143,9 @@ async def search_facts(
     - entity_research: Entity research
     - competitor_analysis: Competitor analysis
     """
+    if MOCK_MODE:
+        return mock_provider.search_facts(query, num_results)
+
     input_data = SearchFactsInput(
         query=query,
         purpose=purpose,
@@ -178,6 +191,8 @@ async def publish_video(
     - Pre-emptive auth for long uploads
     - Circuit breaker protection
     """
+    if MOCK_MODE:
+        return mock_provider.publish_video(title, is_short)
 
     async def _upload():
         working_title = title
@@ -372,6 +387,9 @@ async def get_analytics(
     - Demographics data
     - Traffic source analysis
     """
+    if MOCK_MODE:
+        return mock_provider.get_analytics(video_ids)
+
     input_data = AnalyticsInput(
         video_ids=video_ids,
         metrics=metrics or ["views", "likes", "comments", "estimatedMinutesWatched"],
@@ -395,6 +413,9 @@ async def manage_comments(
 
     Actions: post, reply, delete, hide
     """
+    if MOCK_MODE:
+        return mock_provider.manage_comments(action, video_id, comment_text)
+
     input_data = ManageCommentsInput(
         action=action,
         video_id=video_id,
