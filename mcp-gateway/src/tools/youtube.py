@@ -1,3 +1,4 @@
+import asyncio
 import os
 import time
 from typing import Optional
@@ -27,9 +28,9 @@ class YouTubePublisher:
         self.auth = auth_manager
         self.rate_limiter = rate_limiter
 
-    def _get_youtube_service(self, channel_id: Optional[str] = None):
-        creds = self.auth._load_credentials("youtube", channel_id)
-        return build("youtube", "v3", credentials=creds)
+    async def _get_youtube_service(self, channel_id: Optional[str] = None):
+        creds = await self.auth.get_credentials("youtube", channel_id)
+        return await asyncio.to_thread(build, "youtube", "v3", credentials=creds)
 
     async def publish_video(self, input_data: PublishVideoInput) -> PublishVideoOutput:
         start_time = time.time()
@@ -37,7 +38,7 @@ class YouTubePublisher:
 
         await self.rate_limiter.acquire("youtube_upload")
 
-        youtube = self._get_youtube_service(input_data.channel_id)
+        youtube = await self._get_youtube_service(input_data.channel_id)
 
         try:
             description = self._prepare_description(input_data)
@@ -74,7 +75,8 @@ class YouTubePublisher:
                 chunksize=1024 * 1024 * 10,
             )
 
-            request = youtube.videos().insert(
+            request = await asyncio.to_thread(
+                youtube.videos().insert,
                 part="snippet,status,localizations",
                 body=body,
                 media_body=media,
@@ -155,7 +157,7 @@ class YouTubePublisher:
 
         while response is None:
             try:
-                status, response = request.next_chunk()
+                status, response = await asyncio.to_thread(request.next_chunk)
                 if status:
                     logger.debug("Upload progress", progress=f"{int(status.progress() * 100)}%")
                 if response:
@@ -165,7 +167,7 @@ class YouTubePublisher:
                     if retry < max_retries:
                         sleep_seconds = 2**retry
                         logger.warning("Upload error, retrying", retry=retry, sleep=sleep_seconds)
-                        time.sleep(sleep_seconds)
+                        await asyncio.sleep(sleep_seconds)
                         retry += 1
                     else:
                         raise
@@ -175,7 +177,7 @@ class YouTubePublisher:
                 if retry < max_retries:
                     sleep_seconds = 2**retry
                     logger.warning("Network error, retrying", retry=retry, sleep=sleep_seconds)
-                    time.sleep(sleep_seconds)
+                    await asyncio.sleep(sleep_seconds)
                     retry += 1
                 else:
                     raise
@@ -183,7 +185,9 @@ class YouTubePublisher:
 
     async def _set_thumbnail(self, youtube, video_id: str, thumbnail_path: str) -> bool:
         try:
-            youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(thumbnail_path)).execute()
+            await asyncio.to_thread(
+                youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(thumbnail_path)).execute
+            )
             return True
         except HttpError as e:
             logger.error("Thumbnail set error", error=str(e))
@@ -191,7 +195,7 @@ class YouTubePublisher:
 
     async def _post_pinned_comment(self, youtube, video_id: str, comment_text: str) -> Optional[str]:
         try:
-            comment_response = (
+            comment_response = await asyncio.to_thread(
                 youtube.commentThreads()
                 .insert(
                     part="snippet",
@@ -202,7 +206,7 @@ class YouTubePublisher:
                         }
                     },
                 )
-                .execute()
+                .execute
             )
             comment_id = comment_response["id"]
             logger.info("Comment posted", comment_id=comment_id)

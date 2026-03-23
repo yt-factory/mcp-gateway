@@ -1,3 +1,4 @@
+import asyncio
 from enum import Enum
 from typing import List, Optional
 
@@ -33,12 +34,12 @@ class CommentsService:
     def __init__(self, auth_manager: PreemptiveAuthManager):
         self.auth = auth_manager
 
-    def _get_youtube_service(self, channel_id: Optional[str] = None):
-        creds = self.auth._load_credentials("youtube", channel_id)
-        return build("youtube", "v3", credentials=creds)
+    async def _get_youtube_service(self, channel_id: Optional[str] = None):
+        creds = await self.auth.get_credentials("youtube", channel_id)
+        return await asyncio.to_thread(build, "youtube", "v3", credentials=creds)
 
     async def manage_comments(self, input_data: ManageCommentsInput) -> dict:
-        youtube = self._get_youtube_service()
+        youtube = await self._get_youtube_service()
         try:
             if input_data.action == CommentAction.POST:
                 return await self._post_comment(youtube, input_data.video_id, input_data.comment_text or "")
@@ -57,28 +58,30 @@ class CommentsService:
             return {"success": False, "error": str(e)}
 
     async def _post_comment(self, youtube, video_id: str, text: str) -> dict:
-        response = (
+        response = await asyncio.to_thread(
             youtube.commentThreads()
             .insert(
                 part="snippet",
                 body={"snippet": {"videoId": video_id, "topLevelComment": {"snippet": {"textOriginal": text}}}},
             )
-            .execute()
+            .execute
         )
         return {"success": True, "comment_id": response["id"], "action": "posted"}
 
     async def _reply_to_comment(self, youtube, parent_id: str, text: str) -> dict:
-        response = (
+        response = await asyncio.to_thread(
             youtube.comments()
             .insert(part="snippet", body={"snippet": {"parentId": parent_id, "textOriginal": text}})
-            .execute()
+            .execute
         )
         return {"success": True, "comment_id": response["id"], "action": "replied"}
 
     async def _delete_comment(self, youtube, comment_id: str) -> dict:
-        youtube.comments().delete(id=comment_id).execute()
+        await asyncio.to_thread(youtube.comments().delete(id=comment_id).execute)
         return {"success": True, "comment_id": comment_id, "action": "deleted"}
 
     async def _hide_comment(self, youtube, comment_id: str) -> dict:
-        youtube.comments().setModerationStatus(id=comment_id, moderationStatus="heldForReview").execute()
+        await asyncio.to_thread(
+            youtube.comments().setModerationStatus(id=comment_id, moderationStatus="heldForReview").execute
+        )
         return {"success": True, "comment_id": comment_id, "action": "hidden"}

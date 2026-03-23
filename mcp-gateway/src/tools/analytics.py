@@ -1,3 +1,4 @@
+import asyncio
 from datetime import date, timedelta
 from typing import List
 
@@ -15,10 +16,10 @@ class AnalyticsService:
         self.auth = auth_manager
         self._analytics_service = None
 
-    def _get_analytics_service(self):
+    async def _get_analytics_service(self):
         if not self._analytics_service:
-            creds = self.auth._load_credentials("youtube_analytics", None)
-            self._analytics_service = build("youtubeAnalytics", "v2", credentials=creds)
+            creds = await self.auth.get_credentials("youtube_analytics", None)
+            self._analytics_service = await asyncio.to_thread(build, "youtubeAnalytics", "v2", credentials=creds)
         return self._analytics_service
 
     async def get_analytics(self, input_data: AnalyticsInput) -> AnalyticsOutput:
@@ -29,8 +30,8 @@ class AnalyticsService:
 
         for video_id in input_data.video_ids:
             try:
-                analytics = self._get_analytics_service()
-                response = (
+                analytics = await self._get_analytics_service()
+                response = await asyncio.to_thread(
                     analytics.reports()
                     .query(
                         ids="channel==MINE",
@@ -39,7 +40,7 @@ class AnalyticsService:
                         metrics=",".join(input_data.metrics),
                         filters=f"video=={video_id}",
                     )
-                    .execute()
+                    .execute
                 )
 
                 if response.get("rows"):
@@ -99,8 +100,8 @@ class AnalyticsService:
 
     async def _get_demographics(self, video_id: str, start_date: date, end_date: date) -> dict:
         try:
-            analytics = self._get_analytics_service()
-            response = (
+            analytics = await self._get_analytics_service()
+            response = await asyncio.to_thread(
                 analytics.reports()
                 .query(
                     ids="channel==MINE",
@@ -110,7 +111,7 @@ class AnalyticsService:
                     dimensions="ageGroup,gender",
                     filters=f"video=={video_id}",
                 )
-                .execute()
+                .execute
             )
             demographics: dict = {"age": {}, "gender": {}}
             for row in response.get("rows", []):
@@ -124,8 +125,8 @@ class AnalyticsService:
 
     async def _get_traffic_sources(self, video_id: str, start_date: date, end_date: date) -> dict:
         try:
-            analytics = self._get_analytics_service()
-            response = (
+            analytics = await self._get_analytics_service()
+            response = await asyncio.to_thread(
                 analytics.reports()
                 .query(
                     ids="channel==MINE",
@@ -135,7 +136,7 @@ class AnalyticsService:
                     dimensions="insightTrafficSourceType",
                     filters=f"video=={video_id}",
                 )
-                .execute()
+                .execute
             )
             sources = {}
             for row in response.get("rows", []):

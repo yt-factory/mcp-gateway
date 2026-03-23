@@ -1,3 +1,4 @@
+import asyncio
 import os
 from datetime import datetime
 from typing import List, Literal, Optional
@@ -65,20 +66,20 @@ class SearchService:
         self._search_service = None
         self._kg_service = None
 
-    def _get_search_service(self):
+    async def _get_search_service(self):
         if not self._search_service:
             from googleapiclient.discovery import build
 
-            creds = self.auth._load_credentials("search", None)
-            self._search_service = build("customsearch", "v1", credentials=creds)
+            creds = await self.auth.get_credentials("search", None)
+            self._search_service = await asyncio.to_thread(build, "customsearch", "v1", credentials=creds)
         return self._search_service
 
-    def _get_kg_service(self):
+    async def _get_kg_service(self):
         if not self._kg_service:
             from googleapiclient.discovery import build
 
             api_key = os.getenv("GOOGLE_API_KEY")
-            self._kg_service = build("kgsearch", "v1", developerKey=api_key)
+            self._kg_service = await asyncio.to_thread(build, "kgsearch", "v1", developerKey=api_key)
         return self._kg_service
 
     async def search_facts(self, input_data: SearchFactsInput) -> SearchFactsOutput:
@@ -87,11 +88,11 @@ class SearchService:
         knowledge_panel = None
 
         try:
-            search_service = self._get_search_service()
-            search_response = (
+            search_service = await self._get_search_service()
+            search_response = await asyncio.to_thread(
                 search_service.cse()
                 .list(q=input_data.query, cx=os.getenv("GOOGLE_CSE_ID"), num=input_data.num_results)
-                .execute()
+                .execute
             )
 
             for item in search_response.get("items", []):
@@ -128,8 +129,10 @@ class SearchService:
 
     async def _extract_entities(self, query: str) -> List[Entity]:
         try:
-            kg_service = self._get_kg_service()
-            response = kg_service.entities().search(query=query, limit=10, languages=["en"]).execute()
+            kg_service = await self._get_kg_service()
+            response = await asyncio.to_thread(
+                kg_service.entities().search(query=query, limit=10, languages=["en"]).execute
+            )
 
             entities = []
             for item in response.get("itemListElement", []):
