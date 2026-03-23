@@ -72,6 +72,8 @@ comments_service = CommentsService(auth_manager)
 # Initialize circuit breakers
 youtube_breaker = circuit_registry.get_or_create("youtube_upload", BREAKER_CONFIGS["youtube_upload"])
 trends_breaker = circuit_registry.get_or_create("google_trends", BREAKER_CONFIGS["google_trends"])
+search_breaker = circuit_registry.get_or_create("google_search", BREAKER_CONFIGS.get("google_search", CircuitBreakerConfig()))
+analytics_breaker = circuit_registry.get_or_create("youtube_analytics", BREAKER_CONFIGS.get("youtube_analytics", CircuitBreakerConfig()))
 
 
 # ============================================
@@ -146,15 +148,28 @@ async def search_facts(
     if MOCK_MODE:
         return mock_provider.search_facts(query, num_results)
 
-    input_data = SearchFactsInput(
-        query=query,
-        purpose=purpose,
-        num_results=num_results,
-        include_snippets=include_snippets,
-        include_entities=include_entities,
-    )
-    result = await search_service.search_facts(input_data)
-    return result.model_dump()
+    async def _do_search():
+        input_data = SearchFactsInput(
+            query=query,
+            purpose=purpose,
+            num_results=num_results,
+            include_snippets=include_snippets,
+            include_entities=include_entities,
+        )
+        result = await search_service.search_facts(input_data)
+        return result.model_dump()
+
+    result, status = await search_breaker.call(_do_search)
+
+    if status == "downgraded":
+        return {
+            "status": "downgraded",
+            "message": "Google Search API temporarily unavailable. Please retry later.",
+            "results": [],
+            "entities": [],
+        }
+
+    return result
 
 
 @mcp.tool()
@@ -390,14 +405,26 @@ async def get_analytics(
     if MOCK_MODE:
         return mock_provider.get_analytics(video_ids)
 
-    input_data = AnalyticsInput(
-        video_ids=video_ids,
-        metrics=metrics or ["views", "likes", "comments", "estimatedMinutesWatched"],
-        include_demographics=include_demographics,
-        include_traffic_sources=include_traffic_sources,
-    )
-    result = await analytics_service.get_analytics(input_data)
-    return result.model_dump()
+    async def _do_analytics():
+        input_data = AnalyticsInput(
+            video_ids=video_ids,
+            metrics=metrics or ["views", "likes", "comments", "estimatedMinutesWatched"],
+            include_demographics=include_demographics,
+            include_traffic_sources=include_traffic_sources,
+        )
+        result = await analytics_service.get_analytics(input_data)
+        return result.model_dump()
+
+    result, status = await analytics_breaker.call(_do_analytics)
+
+    if status == "downgraded":
+        return {
+            "status": "downgraded",
+            "message": "YouTube Analytics API temporarily unavailable. Please retry later.",
+            "videos": [],
+        }
+
+    return result
 
 
 @mcp.tool()
@@ -416,14 +443,27 @@ async def manage_comments(
     if MOCK_MODE:
         return mock_provider.manage_comments(action, video_id, comment_text)
 
-    input_data = ManageCommentsInput(
-        action=action,
-        video_id=video_id,
-        comment_text=comment_text,
-        comment_id=comment_id,
-        reply_to_comment_id=reply_to_comment_id,
-    )
-    return await comments_service.manage_comments(input_data)
+    async def _do_comments():
+        input_data = ManageCommentsInput(
+            action=action,
+            video_id=video_id,
+            comment_text=comment_text,
+            comment_id=comment_id,
+            reply_to_comment_id=reply_to_comment_id,
+        )
+        return await comments_service.manage_comments(input_data)
+
+    result, status = await youtube_breaker.call(_do_comments)
+
+    if status == "downgraded":
+        return {
+            "success": False,
+            "status": "downgraded",
+            "message": "YouTube API temporarily unavailable. Please retry later.",
+            "error": "Circuit breaker open - too many recent failures",
+        }
+
+    return result
 
 
 # ============================================
